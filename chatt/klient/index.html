@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sv">
+    <head>
+        <meta charset="utf-8">
+        <title>Chatt</title>
+    </head>
+    <body>
+        <h1>Chattrum</h1>
+        <input id="namn" placeholder="Ditt namn">
+        <div id="logg" style="border:1px solid #888;height:250px;overflow:auto;margin:8px 0"></div>
+        <input id="text" placeholder="Skriv ett meddelande" size="40">
+        <button id="knapp">Skicka</button>
+
+        <script>
+            const ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+            const logg = document.getElementById('logg');
+            const namn = document.getElementById('namn');
+            const text = document.getElementById('text');
+
+            ws.onmessage = (e) => {
+                const rad = document.createElement('div');
+                rad.textContent = e.data;
+                logg.append(rad);
+                logg.scrollTop = logg.scrollHeight;
+            };
+
+            function skicka() {
+                if (!text.value.trim()) return;
+                ws.send((namn.value || 'anonym') + ': ' + text.value);
+                text.value = '';
+            }
+            document.getElementById('knapp').onclick = skicka;
+            text.onkeydown = (e) => { if (e.key === 'Enter') skicka(); };
+        </script>
+    </body>
+</html>
