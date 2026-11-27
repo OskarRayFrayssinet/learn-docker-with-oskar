@@ -1,0 +1,11 @@
+services:
+  chattserver:
+    build: ./server
+  klient1:
+    build: ./klient
+    ports:
+      - "8081:80"
+  klient2:
+    build: ./klient
+    ports:
+      - "8082:80"
